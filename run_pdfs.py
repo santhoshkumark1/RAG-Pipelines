@@ -1,18 +1,3 @@
-"""
-run_pdfs.py
-===========
-Loads every PDF in a folder, runs them through the RAG pipeline, and lets
-you ask questions from the command line.
-
-Setup:
-    pip install pypdf openai   (or: pip install pypdf anthropic)
-
-Put your PDFs in a folder called "pdfs" next to this script, then run:
-    python3 run_pdfs.py --backend openai --api-key sk-...
-
-Then type questions when prompted. Type "quit" to exit.
-"""
-
 import argparse
 import glob
 import os
