@@ -1,18 +1,3 @@
-"""
-demo.py
-=======
-Runs the RAG pipeline end-to-end on a small sample corpus, with one
-answerable question and one unanswerable ("false premise") question, to show
-the abstain-when-unsure behavior.
-
-Run with the offline MockLLMClient (no setup needed):
-    python demo.py
-
-Run with a real LLM for much better answer quality:
-    python demo.py --backend openai --api-key sk-...       [--model gpt-4o-mini]
-    python demo.py --backend anthropic --api-key sk-ant-... [--model claude-sonnet-5]
-"""
-
 import argparse
 import json
 
