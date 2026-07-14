@@ -1,26 +1,3 @@
-"""
-rag_pipeline.py
-================
-A self-contained implementation of a "retrieve, constrain, verify, abstain"
-RAG pipeline: hybrid (dense + BM25) retrieval with reciprocal-rank fusion,
-citation-constrained generation, atomic-claim faithfulness verification, and
-a calibrated abstention policy, wired into a small self-correcting agent loop.
-
-This is a portable, CPU-only adaptation. It does not require a GPU, a local
-vLLM server, or a Hugging Face download:
-
-  * "Dense" retrieval uses TF-IDF + Truncated SVD (scikit-learn) instead of a
-    neural embedder, so it works fully offline.
-  * "Sparse" retrieval uses BM25 (rank_bm25).
-  * The LLM used for routing / generation / claim-checking is behind a small
-    LLMClient interface. A MockLLMClient (extractive, offline, no API key)
-    is used by default so the whole thing runs out of the box. Swap in
-    OpenAIClient or AnthropicClient (stubs included) to use a real model.
-
-Usage:
-    python demo.py
-"""
-
 from __future__ import annotations
 
 import re
@@ -78,7 +55,7 @@ class MockLLMClient:
         return "single_hop"
 
     def _grade_retrieval(self, user: str) -> str:
-        # crude: more overlapping content words between question and context -> higher grade
+     
         m = re.search(r"Question: (.*)", user)
         q = m.group(1) if m else ""
         qwords = set(re.findall(r"[a-zA-Z]{4,}", q.lower()))
@@ -106,8 +83,7 @@ class MockLLMClient:
         return f"{min(1.0, score):.2f}"
 
     def _answer(self, user: str) -> str:
-        # naive extractive "answer": pick the passage sentence with the most
-        # word overlap with the question, cite that passage's id.
+        
         m = re.search(r"Context passages:\n(.*)\n\nQuestion: (.*)\n\nAnswer:", user, re.S)
         if not m:
             return "INSUFFICIENT_EVIDENCE"
@@ -190,7 +166,7 @@ class Chunk:
 class RetrievedChunk:
     chunk: Chunk
     score: float
-    source: str  # "dense" | "sparse" | "hybrid" | "reranked"
+    source: str  
 
     @property
     def id(self) -> str:
@@ -225,7 +201,7 @@ class CitedAnswer:
 
 @dataclass
 class FinalAnswer:
-    status: str  # "answered" | "abstained"
+    status: str  
     answer: str
     citations: list[str]
     min_support: float
@@ -244,7 +220,7 @@ def normalize_text(s: str) -> str:
 
 
 def split_sentences(text: str) -> list[str]:
-    # lightweight sentence splitter; good enough without a heavy NLP dependency
+    
     text = text.strip()
     if not text:
         return []
